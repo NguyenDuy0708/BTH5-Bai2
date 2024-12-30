@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Staff;
 use App\Models\Department;
+use Database\Factories\StaffFactory;
 class StaffSeeder extends Seeder
 {
     /**

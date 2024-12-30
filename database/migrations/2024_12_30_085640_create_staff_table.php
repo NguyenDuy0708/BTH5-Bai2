@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('title')->nullable();
-            $table->string('acdemic_rank')->nullable();
+            $table->string('academic_rank')->nullable();
             $table->string('degree')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
