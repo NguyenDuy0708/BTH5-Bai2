@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('staff', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('title')->nullable();
+            $table->string('acdemic_rank')->nullable();
+            $table->string('degree')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->unsignedBigInteger('department_id');
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade'); 
             $table->timestamps();
         });
     }

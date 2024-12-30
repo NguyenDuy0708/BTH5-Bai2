@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->unsignedBigInteger('staff_id')->nullable();
+            $table->foreign('staff_id')->references('id')->on('staff')->onDelete('cascade');
+            $table->enum('role', ['admin', 'staff','guest'])->default('guest');
             $table->rememberToken();
             $table->timestamps();
         });
