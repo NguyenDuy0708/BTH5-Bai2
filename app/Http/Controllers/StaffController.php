@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Staff;
 use Illuminate\Http\Request;
+use App\Models\Department;
+use Illuminate\Support\Facades\Auth;
 
 class StaffController extends Controller
 {
     public function index()
     {
-        $staffs = \App\Models\Staff::with('department')->get();
+        $staffs = Staff::with('department')->get();
         return view('staffs.index', compact('staffs'));
     }
     public function create()
@@ -29,7 +31,7 @@ class StaffController extends Controller
             'department_id' => 'required',
         ]);
 
-        \App\Models\Staff::create($request->all());
+        Staff::create($request->all());
         return redirect()->route('staffs.index')->with('success', 'Staff created successfully');
     }
 
@@ -41,7 +43,7 @@ class StaffController extends Controller
     
     public function edit(Staff $staff)
     {
-        $departments = \App\Models\Department::all();
+        $departments = Department::all();
         return view('staffs.edit', compact('staff','departments'));
     }
 
@@ -66,5 +68,34 @@ class StaffController extends Controller
     {
         $staff->delete();
         return redirect()->route('staffs.index')->with('success', 'Staff deleted successfully');
+    }
+
+    public function editMyProfile()
+    {
+        $user = Auth::user();
+        $staff = $user->staff;
+
+        if (!$staff) {
+            abort(403, 'You are not a staff member.');
+        }
+        return view('staffs.editMyProfile', compact('staff'));
+    }
+    public function updateMyProfile(Request $request)
+    {
+        $user = Auth::user();
+        $staff = $user->staff;
+
+        if (!$staff) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $validatedData = $request->validate([
+            'phone' => 'nullable|max:15',
+            'email' => 'nullable|email|max:255|unique:staffs,email,' . $staff->id,
+        ]);
+
+        $staff->update($validatedData);
+
+        return redirect()->route('dashboard')->with('success', 'Your profile updated successfully!');
     }
 }
